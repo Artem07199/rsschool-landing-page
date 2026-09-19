@@ -10,41 +10,46 @@
   <body>
     <header class="header">
       <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="logo" /></a>
+      <nav class="header-navigation">
       <ul class="header-nav">
         <li class="nav-link">
-          <a href="" class="nav-link-page">Favorite coffee</a>
+          <a href="index.html#fav" class="nav-link-page">Favorite coffee</a>
         </li>
-        <li class="nav-link"><a href="" class="nav-link-page">About</a></li>
+        <li class="nav-link"><a href="index.html#about" class="nav-link-page">About</a></li>
         <li class="nav-link">
-          <a href="" class="nav-link-page">Mobile app</a>
+          <a href="index.html#mobile" class="nav-link-page">Mobile app</a>
         </li>
         <li class="nav-link">
-          <a href="" class="nav-link-page">Contact us</a>
+          <a href="index.html#contact" class="nav-link-page">Contact us</a>
         </li>
       </ul>
+      </nav>
       <div class="header-right">
-        <div class="theme-switch">
-          <div class="theme-light">
-            <img src="assets/img/Sun.svg" alt="Light theme" />
-          </div>
+<div class="theme-switch">
+  <button class="theme-light" type="button" aria-label="Light theme">
+    <img src="assets/img/Sun.svg" alt="" />
+  </button>
 
-          <div class="theme-dark">
-            <img src="assets/img/Moon.svg" alt="Dark theme" />
-          </div>
-        </div>
+  <button class="theme-dark" type="button" aria-label="Dark theme">
+    <img src="assets/img/Moon.svg" alt="" />
+  </button>
+</div>
 
         <a href="menu.html" class="header-menu">
           <span>Menu</span>
           <img src="assets/img/coffee-cup.svg" alt="" class="menu-icon" />
         </a>
+        <button class="burger-btn" aria-label="Open menu">
+    <img src="assets/img/menu.svg" alt="Menu" />
+  </button>
       </div>
     </header>
     <main>
    <section class="menu">
-  <h2 class="menu-heading">
+  <h1 class="menu-heading">
     Behind each of our cups<br>
     hides an <span>amazing surprise</span>
-  </h2>
+  </h1>
 
   <div class="menu-tabs">
     <button class="menu-tab active">
@@ -161,7 +166,9 @@
   </div>
 
 </div>
- 
+ <button class="menu-load-more" type="button" aria-label="Load more products">
+  <img src="assets/img/refresh.svg" alt="Refresh" />
+</button>
 
   </div>
 </section>
