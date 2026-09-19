@@ -33,13 +33,15 @@
   margin: 0;
   padding: 0;
 }
-html, body {
+html,
+body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
-img, svg {
+img,
+svg {
   max-width: 100%;
   height: auto;
   object-fit: cover;
@@ -188,7 +190,6 @@ section {
   cursor: pointer;
   border: none;
   background: transparent;
-  
 }
 
 .theme-light {
@@ -204,7 +205,6 @@ section {
   width: 18px;
   height: 18px;
   transition: 0.2s ease;
-  
 }
 
 .theme-dark:hover {
@@ -257,7 +257,7 @@ body.dark-theme .theme-light img {
 
 .hero {
   margin: 0 auto 80px auto;
-  background-image: url('assets/img/img-hero.jpg');
+  background-image: url("assets/img/img-hero.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -268,7 +268,7 @@ body.dark-theme .theme-light img {
   align-items: center;
   padding: 100px;
   padding-left: 60px;
-    padding-right: 60px;
+  padding-right: 60px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -543,8 +543,8 @@ body.dark-theme .slider-button:hover {
   margin: 0 0 40px;
   color: var(--text-primary);
   font-family: var(--font-family);
-font-size: 16px;
-line-height: 150%;
+  font-size: 16px;
+  line-height: 150%;
 }
 
 .mobile-btns {
@@ -638,7 +638,7 @@ body.dark-theme .mobile-btn:hover {
 }
 
 footer {
-border-radius: 40px;
+  border-radius: 40px;
   width: 100%;
   max-width: 1360px;
   min-height: 450px;
@@ -744,8 +744,6 @@ border-radius: 40px;
   flex-shrink: 0;
 }
 
-
-
 .menu-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -759,7 +757,9 @@ border-radius: 40px;
   border-radius: 40px;
   overflow: hidden;
   background-color: var(--background-page);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
@@ -774,7 +774,7 @@ border-radius: 40px;
   display: block;
   object-fit: cover;
   border-radius: 40px;
-   transition: transform 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
 .menu-card:hover img {
@@ -926,7 +926,6 @@ body.dark-theme .menu-card:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-
 .burger-btn {
   display: none;
   width: 44px;
@@ -981,11 +980,6 @@ body.dark-theme .menu-load-more img {
   filter: brightness(0) invert(1);
 }
 
-
-
-
-
-
 /* 768px */
 @media (max-width: 768px) {
   main,
@@ -1000,14 +994,14 @@ body.dark-theme .menu-load-more img {
     margin-bottom: 100px;
   }
 
-  .header-navigation, .header-menu {
-    display: none; 
+  .header-navigation,
+  .header-menu {
+    display: none;
   }
 
   .burger-btn {
     display: flex;
   }
-
 
   .hero {
     height: auto;
@@ -1036,7 +1030,7 @@ body.dark-theme .menu-load-more img {
   }
 
   .about-image-small {
-    display: none; 
+    display: none;
   }
 
   .about-image-large {
@@ -1095,22 +1089,23 @@ body.dark-theme .menu-load-more img {
     display: flex;
   }
 
-  .menu-cards .menu-card:nth-child(n+5) {
+  .menu-cards .menu-card:nth-child(n + 5) {
     display: none;
   }
 
-  .menu-cards.expanded .menu-card:nth-child(n+5) {
+  .menu-cards.expanded .menu-card:nth-child(n + 5) {
     display: block;
   }
 }
 
 @media (max-width: 600px) {
-  main, header {
+  main,
+  header {
     padding-left: 16px;
     padding-right: 16px;
   }
-.hero {
-height: auto;
+  .hero {
+    height: auto;
     min-height: 500px;
     padding: 60px 16px;
     border-radius: 20px;
@@ -1267,7 +1262,7 @@ height: auto;
   }
 
   footer {
-width: calc(100% - 32px);
+    width: calc(100% - 32px);
     margin-left: 16px;
     margin-right: 16px;
     padding: 60px 16px;
@@ -1289,4 +1284,3 @@ width: calc(100% - 32px);
     margin-top: 40px;
   }
 }
-
