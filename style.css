@@ -1123,13 +1123,15 @@ body.dark-theme .menu-load-more img {
     margin-bottom: 40px;
   }
 
-  /* SLIDER */
   .slider-heading {
     font-size: 32px;
     line-height: 125%;
   }
 
   .slider-button {
+    display: none;
+  }
+  body.dark-theme .slider-button {
     display: none;
   }
 
@@ -1158,7 +1160,6 @@ body.dark-theme .menu-load-more img {
     font-size: 24px;
   }
 
-  /* ABOUT */
   .about-heading {
     font-size: 32px;
     line-height: 125%;
@@ -1184,7 +1185,6 @@ body.dark-theme .menu-load-more img {
     border-radius: 20px;
   }
 
-  /* MOBILE APP */
   .mobile {
     flex-direction: column;
     gap: 40px;
