@@ -24,6 +24,12 @@
         <li class="nav-link">
           <a href="#contact" class="nav-link-page">Contact us</a>
         </li>
+        <li class="nav-link nav-link-menu">
+          <a href="menu.html" class="nav-link-page header-menu">
+            <span>Menu</span>
+            <img src="assets/img/coffee-cup.svg" alt="" class="menu-icon">
+          </a>
+        </li>
       </ul>
     </nav>
     <div class="header-right">
@@ -41,8 +47,8 @@
         <span>Menu</span>
         <img src="assets/img/coffee-cup.svg" alt="" class="menu-icon">
       </a>
-      <button class="burger-btn" aria-label="Open menu">
-        <img src="assets/img/menu.svg" alt="Menu">
+      <button class="burger-btn" type="button" aria-label="Open menu" aria-expanded="false">
+        <img src="assets/img/menu.svg" alt="">
       </button>
     </div>
   </header>
@@ -72,23 +78,53 @@
         Choose your <span class="slider-heading-span">favorite</span> coffee
       </h2>
       <div class="slider">
-        <button class="slider-button slider-button-left">←</button>
+  <button class="slider-button slider-button-left">←</button>
 
-        <div class="slider-card">
-          <img class="slider-card-image" src="assets/img/coffee-slider-1.png" alt="S’mores Frappuccino">
+  <div class="slider-viewport">
+    <div class="slider-track">
+      <div class="slider-card">
+        <img class="slider-card-image" src="assets/img/coffee-slider-1.png" alt="S’mores Frappuccino">
 
-          <h3 class="slider-card-title">S’mores Frappuccino</h3>
+        <h3 class="slider-card-title">S’mores Frappuccino</h3>
 
-          <p class="slider-card-description">
-            This new drink takes an espresso and mixes it with brown sugar and
-            cinnamon before being topped with oat milk.
-          </p>
+        <p class="slider-card-description">
+          This new drink takes an espresso and mixes it with brown sugar and
+          cinnamon before being topped with oat milk.
+        </p>
 
-          <span class="slider-card-price">$5.50</span>
-        </div>
-
-        <button class="slider-button slider-button-right">→</button>
+        <span class="slider-card-price">$5.50</span>
       </div>
+
+      <div class="slider-card">
+        <img class="slider-card-image" src="assets/img/coffee-slider-2.png" alt="Honey Raf">
+
+        <h3 class="slider-card-title">Honey Raf</h3>
+
+        <p class="slider-card-description">
+          Espresso with frothed milk, cream and aromatic honey for a warm,
+          velvety cup.
+        </p>
+
+        <span class="slider-card-price">$5.50</span>
+      </div>
+
+      <div class="slider-card">
+        <img class="slider-card-image" src="assets/img/coffee-slider-3.png" alt="Latte Macchiato">
+
+        <h3 class="slider-card-title">Latte Macchiato</h3>
+
+        <p class="slider-card-description">
+          Espresso layered with frothed milk and a touch of chocolate on
+          top.
+        </p>
+
+        <span class="slider-card-price">$5.50</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="slider-button slider-button-right">→</button>
+</div>
 
       <div class="slider-pagination">
         <span class="pagination-item active"></span>
