@@ -79,10 +79,6 @@
   <img src="assets/img/refresh.svg" alt="refresh">
 </button>
 
-      <button class="menu-load-more" type="button" aria-label="Load more products">
-        <img src="assets/img/refresh.svg" alt="refresh">
-      </button>
-      </div>
     </section>
   </main>
   <footer>
@@ -128,6 +124,50 @@
       </div>
     </div>
   </footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" aria-label="Close">✕</button>
+
+      <div class="modal-body">
+        <div class="modal-image">
+          <img id="modalImage" src="" alt="">
+        </div>
+
+        <div class="modal-info">
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <p class="modal-description" id="modalDescription"></p>
+
+          <div class="modal-section">
+            <h3 class="modal-section-title">Size</h3>
+            <div class="modal-sizes" id="modalSizes"></div>
+          </div>
+
+          <div class="modal-section">
+            <h3 class="modal-section-title">Additives</h3>
+            <div class="modal-additives" id="modalAdditives"></div>
+          </div>
+
+          <div class="modal-total-row">
+            <span>Total:</span>
+            <span id="modalTotal"></span>
+          </div>
+
+          <div class="modal-note">
+            <span class="modal-note-icon">ⓘ</span>
+            <p>
+              The cost is not final. Download our mobile app to see the final
+              price and place your order. Earn loyalty points and enjoy your
+              favorite coffee with up to 20% discount.
+            </p>
+          </div>
+
+          <button class="modal-close-btn" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 

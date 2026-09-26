@@ -160,27 +160,28 @@ window.addEventListener('resize', () => {
 
 
 
-
 const menuCardsContainer = document.getElementById('menuCards');
 const menuTabs = document.querySelectorAll('.menu-tab');
 const menuLoadMoreBtn = document.querySelector('.menu-load-more');
 
 let allProducts = [];
+let currentProducts = [];
 let activeCategory = 'coffee';
 
 function renderMenuCards(category) {
   if (!menuCardsContainer) return;
 
-  const filtered = allProducts.filter((product) => product.category === category);
+  currentProducts = allProducts.filter((product) => product.category === category);
   const categoryCounters = {};
 
-  menuCardsContainer.innerHTML = filtered.map((product) => {
+  menuCardsContainer.innerHTML = currentProducts.map((product, index) => {
     categoryCounters[product.category] = (categoryCounters[product.category] || 0) + 1;
     const imageNumber = categoryCounters[product.category];
     const imagePath = `assets/img/${product.category}-${imageNumber}.jpg`;
+    product.image = imagePath;
 
     return `
-      <div class="menu-card">
+      <div class="menu-card" data-index="${index}">
         <img src="${imagePath}" alt="${product.name}">
 
         <div class="menu-card-content">
@@ -193,6 +194,11 @@ function renderMenuCards(category) {
   }).join('');
 
   menuCardsContainer.classList.remove('expanded');
+
+  if (menuLoadMoreBtn) {
+    const hasMoreThanFour = currentProducts.length > 4;
+    menuLoadMoreBtn.style.display = hasMoreThanFour ? '' : 'none';
+  }
 }
 
 fetch('products.json')
@@ -218,5 +224,127 @@ menuTabs.forEach((tab) => {
 if (menuLoadMoreBtn && menuCardsContainer) {
   menuLoadMoreBtn.addEventListener('click', () => {
     menuCardsContainer.classList.add('expanded');
+    menuLoadMoreBtn.style.display = 'none';
   });
 }
+
+if (menuCardsContainer) {
+  menuCardsContainer.addEventListener('click', (e) => {
+    const card = e.target.closest('.menu-card');
+    if (!card) return;
+
+    const index = Number(card.dataset.index);
+    openProductModal(currentProducts[index]);
+  });
+}
+
+const modalOverlay = document.getElementById('modalOverlay');
+const modalImage = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalDescription = document.getElementById('modalDescription');
+const modalSizes = document.getElementById('modalSizes');
+const modalAdditives = document.getElementById('modalAdditives');
+const modalTotal = document.getElementById('modalTotal');
+const modalCloseBtn = document.querySelector('.modal-close');
+const modalCloseBtnBottom = document.querySelector('.modal-close-btn');
+
+let modalBasePrice = 0;
+let modalSizeAddPrice = 0;
+let modalAdditivesAddPrice = 0;
+
+function updateModalTotal() {
+  const total = modalBasePrice + modalSizeAddPrice + modalAdditivesAddPrice;
+  modalTotal.textContent = `$${total.toFixed(2)}`;
+}
+
+function openProductModal(product) {
+  if (!product || !modalOverlay) return;
+
+  modalImage.src = product.image || '';
+  modalImage.alt = product.name;
+  modalTitle.textContent = product.name;
+  modalDescription.textContent = product.description;
+
+  modalBasePrice = parseFloat(product.price);
+  modalSizeAddPrice = 0;
+  modalAdditivesAddPrice = 0;
+
+  const sizeEntries = Object.entries(product.sizes || {});
+  modalSizes.innerHTML = sizeEntries.map(([key, size], i) => `
+    <button type="button" class="modal-size-btn${i === 0 ? ' active' : ''}" data-add-price="${size['add-price']}">
+      <span class="badge">${key.toUpperCase()}</span>
+      <span>${size.size}</span>
+    </button>
+  `).join('');
+
+  modalAdditives.innerHTML = (product.additives || []).map((additive, i) => `
+    <button type="button" class="modal-additive-btn" data-add-price="${additive['add-price']}">
+      <span class="badge">${i + 1}</span>
+      <span>${additive.name}</span>
+    </button>
+  `).join('');
+
+  updateModalTotal();
+  openModal();
+}
+
+function openModal() {
+  const scrollY = window.scrollY;
+  document.body.dataset.modalScrollY = scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = '100%';
+
+  modalOverlay.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('open');
+  document.body.classList.remove('modal-open');
+
+  const scrollY = Number(document.body.dataset.modalScrollY || 0);
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollY);
+}
+
+if (modalSizes) {
+  modalSizes.addEventListener('click', (e) => {
+    const btn = e.target.closest('.modal-size-btn');
+    if (!btn) return;
+
+    modalSizes.querySelectorAll('.modal-size-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    modalSizeAddPrice = parseFloat(btn.dataset.addPrice);
+    updateModalTotal();
+  });
+}
+
+if (modalAdditives) {
+  modalAdditives.addEventListener('click', (e) => {
+    const btn = e.target.closest('.modal-additive-btn');
+    if (!btn) return;
+
+    btn.classList.toggle('active');
+    modalAdditivesAddPrice = Array.from(modalAdditives.querySelectorAll('.modal-additive-btn.active'))
+      .reduce((sum, b) => sum + parseFloat(b.dataset.addPrice), 0);
+    updateModalTotal();
+  });
+}
+
+if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+if (modalCloseBtnBottom) modalCloseBtnBottom.addEventListener('click', closeModal);
+
+if (modalOverlay) {
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('open')) {
+    closeModal();
+  }
+});
