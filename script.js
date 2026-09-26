@@ -157,3 +157,66 @@ if (sliderViewport) {
 window.addEventListener('resize', () => {
   setSliderPosition(sliderPosition, false);
 });
+
+
+
+
+const menuCardsContainer = document.getElementById('menuCards');
+const menuTabs = document.querySelectorAll('.menu-tab');
+const menuLoadMoreBtn = document.querySelector('.menu-load-more');
+
+let allProducts = [];
+let activeCategory = 'coffee';
+
+function renderMenuCards(category) {
+  if (!menuCardsContainer) return;
+
+  const filtered = allProducts.filter((product) => product.category === category);
+  const categoryCounters = {};
+
+  menuCardsContainer.innerHTML = filtered.map((product) => {
+    categoryCounters[product.category] = (categoryCounters[product.category] || 0) + 1;
+    const imageNumber = categoryCounters[product.category];
+    const imagePath = `assets/img/${product.category}-${imageNumber}.jpg`;
+
+    return `
+      <div class="menu-card">
+        <img src="${imagePath}" alt="${product.name}">
+
+        <div class="menu-card-content">
+          <h2 class="menu-card-heading">${product.name}</h2>
+          <p class="menu-card-subheading">${product.description}</p>
+          <strong class="menu-card-price">$${product.price}</strong>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  menuCardsContainer.classList.remove('expanded');
+}
+
+fetch('products.json')
+  .then((response) => response.json())
+  .then((products) => {
+    allProducts = products;
+    renderMenuCards(activeCategory);
+  })
+  .catch((error) => {
+    console.error('Failed to load products.json:', error);
+  });
+
+menuTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    menuTabs.forEach((t) => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    activeCategory = tab.dataset.category;
+    renderMenuCards(activeCategory);
+  });
+});
+
+if (menuLoadMoreBtn && menuCardsContainer) {
+  menuLoadMoreBtn.addEventListener('click', () => {
+    menuCardsContainer.classList.add('expanded');
+  });
+}

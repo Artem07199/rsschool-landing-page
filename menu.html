@@ -59,119 +59,25 @@
         hides an <span>amazing surprise</span>
       </h1>
 
-      <div class="menu-tabs">
-        <button class="menu-tab active">
-          ☕ <span>Coffee</span>
-        </button>
+<div class="menu-tabs">
+  <button class="menu-tab active" data-category="coffee">
+    ☕ <span>Coffee</span>
+  </button>
 
-        <button class="menu-tab">
-          🫖 <span>Tea</span>
-        </button>
+  <button class="menu-tab" data-category="tea">
+    🫖 <span>Tea</span>
+  </button>
 
-        <button class="menu-tab">
-          🍰 <span>Dessert</span>
-        </button>
-      </div>
-      <div class="menu-cards">
+  <button class="menu-tab" data-category="dessert">
+    🍰 <span>Dessert</span>
+  </button>
+</div>
+      <div class="menu-cards" id="menuCards">
+</div>
 
-        <div class="menu-card">
-          <img src="assets/img/coffee-1.jpg" alt="Irish coffee">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Irish coffee</h2>
-            <p class="menu-card-subheading">
-              Fragrant black coffee with Jameson Irish whiskey and whipped milk
-            </p>
-            <strong class="menu-card-price">$7.00</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-2.jpg" alt="Kahlua coffee">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Kahlua coffee</h2>
-            <p class="menu-card-subheading">
-              Classic coffee with milk and Kahlua liqueur under a cap of frothed milk
-            </p>
-            <strong class="menu-card-price">$7.00</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-3.jpg" alt="Honey raf">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Honey raf</h2>
-            <p class="menu-card-subheading">
-              Espresso with frothed milk, cream and aromatic honey
-            </p>
-            <strong class="menu-card-price">$5.50</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-4.jpg" alt="Ice cappuccino">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Ice cappuccino</h2>
-            <p class="menu-card-subheading">
-              Cappuccino with soft thick foam in summer version with ice
-            </p>
-            <strong class="menu-card-price">$5.00</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-5.jpg" alt="Espresso">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Espresso</h2>
-            <p class="menu-card-subheading">Classic black coffee</p>
-            <strong class="menu-card-price">$4.50</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-6.jpg" alt="Latte">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Latte</h2>
-            <p class="menu-card-subheading">
-              Espresso coffee with the addition of steamed milk and dense milk foam
-            </p>
-            <strong class="menu-card-price">$5.50</strong>
-          </div>
-        </div>
-
-
-        <div class="menu-card">
-          <img src="assets/img/coffee-7.jpg" alt="Latte macchiato">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Latte macchiato</h2>
-            <p class="menu-card-subheading">
-              Espresso with frothed milk and chocolate
-            </p>
-            <strong class="menu-card-price">$5.50</strong>
-          </div>
-        </div>
-        <div class="menu-card">
-          <img src="assets/img/coffee-8.jpg" alt="Latte macchiato">
-
-          <div class="menu-card-content">
-            <h2 class="menu-card-heading">Coffee with cognac</h2>
-            <p class="menu-card-subheading">
-              Fragrant black coffee with cognac and whipped cream
-            </p>
-            <strong class="menu-card-price">$6.50</strong>
-          </div>
-        </div>
+<button class="menu-load-more" type="button" aria-label="Load more products">
+  <img src="assets/img/refresh.svg" alt="refresh">
+</button>
 
       <button class="menu-load-more" type="button" aria-label="Load more products">
         <img src="assets/img/refresh.svg" alt="refresh">
