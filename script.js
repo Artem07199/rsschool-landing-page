@@ -1,9 +1,8 @@
+/* ===== Theme ===== */
 const lightButton = document.querySelector('.theme-light');
 const darkButton = document.querySelector('.theme-dark');
 
-const savedTheme = localStorage.getItem('theme');
-
-if (savedTheme === 'dark') {
+if (localStorage.getItem('theme') === 'dark') {
   document.body.classList.add('dark-theme');
 }
 
@@ -21,20 +20,60 @@ if (darkButton) {
   });
 }
 
+/* ===== Блокировка скролла (общая для меню и модалки) ===== */
+let lockedScrollY = 0;
+let scrollLocks = 0;
+
+function lockScroll() {
+  if (scrollLocks++ > 0) return;
+  lockedScrollY = window.scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${lockedScrollY}px`;
+  document.body.style.width = '100%';
+}
+
+function unlockScroll() {
+  if (scrollLocks === 0 || --scrollLocks > 0) return;
+
+  const html = document.documentElement;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+
+  // отключаем smooth, чтобы позиция вернулась мгновенно
+  html.style.scrollBehavior = 'auto';
+  window.scrollTo(0, lockedScrollY);
+  html.style.scrollBehavior = '';
+}
+
+/* ===== Бургер-меню ===== */
 const burgerBtn = document.querySelector('.burger-btn');
+let menuIsOpen = false;
+let menuCloseTimer = null;
 
-function setMenuOpen(isOpen) {
-  document.body.classList.toggle('menu-open', isOpen);
+function setMenuOpen(isOpen, animate = true) {
+  if (isOpen === menuIsOpen) return;
+  menuIsOpen = isOpen;
+  clearTimeout(menuCloseTimer);
 
-    if (isOpen) {
-    const scrollY = window.scrollY;
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.dataset.scrollY = scrollY;
+  const body = document.body;
+
+  if (isOpen) {
+    if (!body.classList.contains('menu-open')) lockScroll();
+    body.classList.remove('menu-closing');
+    body.classList.add('menu-open');
   } else {
-    document.body.style.position = '';
-    document.body.style.top = '';
-    window.scrollTo(0, Number(document.body.dataset.scrollY || 0));
+    const finish = () => {
+      body.classList.remove('menu-open', 'menu-closing');
+      unlockScroll();
+    };
+
+    if (animate) {
+      body.classList.add('menu-closing');
+      menuCloseTimer = setTimeout(finish, 300);
+    } else {
+      finish();
+    }
   }
 
   if (burgerBtn) {
@@ -44,68 +83,47 @@ function setMenuOpen(isOpen) {
 }
 
 if (burgerBtn) {
-  burgerBtn.addEventListener('click', () => {
-    setMenuOpen(!document.body.classList.contains('menu-open'));
-  });
+  burgerBtn.addEventListener('click', () => setMenuOpen(!menuIsOpen));
 }
 
 document.querySelectorAll('.header-navigation a').forEach((link) => {
-  link.addEventListener('click', () => setMenuOpen(false));
+  link.addEventListener('click', () => setMenuOpen(false, false));
 });
 
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 768) {
-    setMenuOpen(false);
-  }
-});
-
-
-
-
-
+/* ===== Слайдер (только на главной) ===== */
 const sliderTrack = document.querySelector('.slider-track');
 const sliderViewport = document.querySelector('.slider-viewport');
 const sliderPrevBtn = document.querySelector('.slider-button-left');
 const sliderNextBtn = document.querySelector('.slider-button-right');
 const sliderPaginationItems = document.querySelectorAll('.pagination-item');
 
-let sliderPosition = 1;
-let realSlidesCount = 0;
-let isSliderAnimating = false;
-
-function setSliderPosition(position, animate = true) {
-  sliderPosition = position;
-  sliderTrack.style.transition = animate ? 'transform 0.4s ease' : 'none';
-
-  const offset = sliderViewport.clientWidth * sliderPosition;
-  sliderTrack.style.transform = `translateX(-${offset}px)`;
-
-  const realIndex = (sliderPosition - 1 + realSlidesCount) % realSlidesCount;
-  sliderPaginationItems.forEach((item, i) => {
-    item.classList.toggle('active', i === realIndex);
-  });
-}
-
-function goToSlide(direction) {
-  if (!sliderTrack || isSliderAnimating) return;
-  isSliderAnimating = true;
-  setSliderPosition(sliderPosition + direction, true);
-}
-
 if (sliderTrack && sliderViewport) {
   const originalCards = Array.from(sliderTrack.children);
-  realSlidesCount = originalCards.length;
+  const realSlidesCount = originalCards.length;
 
-  const firstClone = originalCards[0].cloneNode(true);
-  const lastClone = originalCards[originalCards.length - 1].cloneNode(true);
+  let sliderPosition = 1;
+  let isSliderAnimating = false;
+  let sliderFallbackTimer = null;
 
-  sliderTrack.appendChild(firstClone);
-  sliderTrack.insertBefore(lastClone, originalCards[0]);
+  sliderTrack.appendChild(originalCards[0].cloneNode(true));
+  sliderTrack.insertBefore(
+    originalCards[realSlidesCount - 1].cloneNode(true),
+    originalCards[0]
+  );
 
-  setSliderPosition(1, false);
+  function setSliderPosition(position, animate = true) {
+    sliderPosition = position;
+    sliderTrack.style.transition = animate ? 'transform 0.4s ease' : 'none';
+    sliderTrack.style.transform = `translateX(-${sliderViewport.clientWidth * sliderPosition}px)`;
 
-  sliderTrack.addEventListener('transitionend', (e) => {
-    if (e.target !== sliderTrack || e.propertyName !== 'transform') return;
+    const realIndex = (sliderPosition - 1 + realSlidesCount) % realSlidesCount;
+    sliderPaginationItems.forEach((item, i) => {
+      item.classList.toggle('active', i === realIndex);
+    });
+  }
+
+  function finishSliderTransition() {
+    clearTimeout(sliderFallbackTimer);
 
     if (sliderPosition === 0) {
       setSliderPosition(realSlidesCount, false);
@@ -114,52 +132,68 @@ if (sliderTrack && sliderViewport) {
     }
 
     isSliderAnimating = false;
-  });
-}
+  }
 
-if (sliderPrevBtn) {
-  sliderPrevBtn.addEventListener('click', () => goToSlide(-1));
-}
+  function moveSliderTo(position) {
+    if (isSliderAnimating || position === sliderPosition) return;
 
-if (sliderNextBtn) {
-  sliderNextBtn.addEventListener('click', () => goToSlide(1));
-}
-
-sliderPaginationItems.forEach((item, i) => {
-  item.addEventListener('click', () => {
-    if (isSliderAnimating || i + 1 === sliderPosition) return;
     isSliderAnimating = true;
-    setSliderPosition(i + 1, true);
-  });
-});
+    setSliderPosition(position, true);
 
-if (sliderViewport) {
+    // страховка: если transitionend не придёт, слайдер не «залипнет»
+    clearTimeout(sliderFallbackTimer);
+    sliderFallbackTimer = setTimeout(finishSliderTransition, 500);
+  }
+
+  setSliderPosition(1, false);
+
+  sliderTrack.addEventListener('transitionend', (e) => {
+    if (e.target !== sliderTrack || e.propertyName !== 'transform') return;
+    finishSliderTransition();
+  });
+
+  if (sliderPrevBtn) {
+    sliderPrevBtn.addEventListener('click', () => moveSliderTo(sliderPosition - 1));
+  }
+
+  if (sliderNextBtn) {
+    sliderNextBtn.addEventListener('click', () => moveSliderTo(sliderPosition + 1));
+  }
+
+  sliderPaginationItems.forEach((item, i) => {
+    item.addEventListener('click', () => moveSliderTo(i + 1));
+  });
+
   let touchStartX = 0;
-  let touchEndX = 0;
+  let touchStartY = 0;
 
   sliderViewport.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
   }, { passive: true });
 
   sliderViewport.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    const delta = touchEndX - touchStartX;
-    const swipeThreshold = 40;
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
 
-    if (delta > swipeThreshold) {
-      goToSlide(-1);
-    } else if (delta < -swipeThreshold) {
-      goToSlide(1);
-    }
+    // игнорируем вертикальный скролл страницы
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+
+    moveSliderTo(dx > 0 ? sliderPosition - 1 : sliderPosition + 1);
   }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(sliderFallbackTimer);
+    isSliderAnimating = false;
+
+    if (sliderPosition === 0) sliderPosition = realSlidesCount;
+    else if (sliderPosition === realSlidesCount + 1) sliderPosition = 1;
+
+    setSliderPosition(sliderPosition, false);
+  });
 }
 
-window.addEventListener('resize', () => {
-  setSliderPosition(sliderPosition, false);
-});
-
-
-
+/* ===== Страница меню: карточки ===== */
 const menuCardsContainer = document.getElementById('menuCards');
 const menuTabs = document.querySelectorAll('.menu-tab');
 const menuLoadMoreBtn = document.querySelector('.menu-load-more');
@@ -196,20 +230,27 @@ function renderMenuCards(category) {
   menuCardsContainer.classList.remove('expanded');
 
   if (menuLoadMoreBtn) {
-    const hasMoreThanFour = currentProducts.length > 4;
-    menuLoadMoreBtn.style.display = hasMoreThanFour ? '' : 'none';
+    menuLoadMoreBtn.style.display = currentProducts.length > 4 ? '' : 'none';
   }
 }
 
-fetch('products.json')
-  .then((response) => response.json())
-  .then((products) => {
-    allProducts = products;
-    renderMenuCards(activeCategory);
-  })
-  .catch((error) => {
-    console.error('Failed to load products.json:', error);
+if (menuCardsContainer) {
+  fetch('products.json')
+    .then((response) => response.json())
+    .then((products) => {
+      allProducts = products;
+      renderMenuCards(activeCategory);
+    })
+    .catch((error) => {
+      console.error('Failed to load products.json:', error);
+    });
+
+  menuCardsContainer.addEventListener('click', (e) => {
+    const card = e.target.closest('.menu-card');
+    if (!card) return;
+    openProductModal(currentProducts[Number(card.dataset.index)]);
   });
+}
 
 menuTabs.forEach((tab) => {
   tab.addEventListener('click', () => {
@@ -228,16 +269,7 @@ if (menuLoadMoreBtn && menuCardsContainer) {
   });
 }
 
-if (menuCardsContainer) {
-  menuCardsContainer.addEventListener('click', (e) => {
-    const card = e.target.closest('.menu-card');
-    if (!card) return;
-
-    const index = Number(card.dataset.index);
-    openProductModal(currentProducts[index]);
-  });
-}
-
+/* ===== Модальное окно ===== */
 const modalOverlay = document.getElementById('modalOverlay');
 const modalImage = document.getElementById('modalImage');
 const modalTitle = document.getElementById('modalTitle');
@@ -245,7 +277,6 @@ const modalDescription = document.getElementById('modalDescription');
 const modalSizes = document.getElementById('modalSizes');
 const modalAdditives = document.getElementById('modalAdditives');
 const modalTotal = document.getElementById('modalTotal');
-const modalCloseBtn = document.querySelector('.modal-close');
 const modalCloseBtnBottom = document.querySelector('.modal-close-btn');
 
 let modalBasePrice = 0;
@@ -257,6 +288,17 @@ function updateModalTotal() {
   modalTotal.textContent = `$${total.toFixed(2)}`;
 }
 
+function openModal() {
+  lockScroll();
+  modalOverlay.classList.add('open');
+}
+
+function closeModal() {
+  if (!modalOverlay || !modalOverlay.classList.contains('open')) return;
+  modalOverlay.classList.remove('open');
+  unlockScroll();
+}
+
 function openProductModal(product) {
   if (!product || !modalOverlay) return;
 
@@ -265,11 +307,12 @@ function openProductModal(product) {
   modalTitle.textContent = product.name;
   modalDescription.textContent = product.description;
 
+  const sizeEntries = Object.entries(product.sizes || {});
+
   modalBasePrice = parseFloat(product.price);
-  modalSizeAddPrice = 0;
+  modalSizeAddPrice = sizeEntries.length ? parseFloat(sizeEntries[0][1]['add-price']) : 0;
   modalAdditivesAddPrice = 0;
 
-  const sizeEntries = Object.entries(product.sizes || {});
   modalSizes.innerHTML = sizeEntries.map(([key, size], i) => `
     <button type="button" class="modal-size-btn${i === 0 ? ' active' : ''}" data-add-price="${size['add-price']}">
       <span class="badge">${key.toUpperCase()}</span>
@@ -286,28 +329,6 @@ function openProductModal(product) {
 
   updateModalTotal();
   openModal();
-}
-
-function openModal() {
-  const scrollY = window.scrollY;
-  document.body.dataset.modalScrollY = scrollY;
-  document.body.style.position = 'fixed';
-  document.body.style.top = `-${scrollY}px`;
-  document.body.style.width = '100%';
-
-  modalOverlay.classList.add('open');
-  document.body.classList.add('modal-open');
-}
-
-function closeModal() {
-  modalOverlay.classList.remove('open');
-  document.body.classList.remove('modal-open');
-
-  const scrollY = Number(document.body.dataset.modalScrollY || 0);
-  document.body.style.position = '';
-  document.body.style.top = '';
-  document.body.style.width = '';
-  window.scrollTo(0, scrollY);
 }
 
 if (modalSizes) {
@@ -334,7 +355,6 @@ if (modalAdditives) {
   });
 }
 
-if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
 if (modalCloseBtnBottom) modalCloseBtnBottom.addEventListener('click', closeModal);
 
 if (modalOverlay) {
@@ -343,8 +363,25 @@ if (modalOverlay) {
   });
 }
 
+/* ===== Escape: сначала модалка, иначе бургер-меню ===== */
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('open')) {
+  if (e.key !== 'Escape') return;
+
+  if (modalOverlay && modalOverlay.classList.contains('open')) {
     closeModal();
+  } else if (menuIsOpen) {
+    setMenuOpen(false);
+  }
+});
+
+/* ===== Переход через брейкпоинт 768px ===== */
+const mobileMedia = window.matchMedia('(max-width: 768px)');
+
+mobileMedia.addEventListener('change', (e) => {
+  if (!e.matches) setMenuOpen(false, false);
+
+  // начальный набор карточек и кнопка пересчитываются под новую ширину
+  if (menuCardsContainer && allProducts.length) {
+    renderMenuCards(activeCategory);
   }
 });

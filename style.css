@@ -1035,25 +1035,6 @@ body.dark-theme .modal {
   background: var(--dark-bg-modal);
 }
 
-.modal-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.06);
-  color: var(--text-primary);
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 1;
-}
-
-body.dark-theme .modal-close {
-  background: rgba(255, 255, 255, 0.08);
-}
 
 .modal-body {
   display: flex;
@@ -1250,6 +1231,18 @@ body.dark-theme .modal-close-btn:hover {
   background: var(--dark-text-primary);
   color: var(--dark-bg-page);
 }
+
+
+@keyframes menuFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menuFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 
 /* 768px */
 @media (max-width: 768px) {
@@ -1513,6 +1506,16 @@ body.dark-theme .modal-close-btn:hover {
   .menu-cards.expanded .menu-card:nth-child(n + 5) {
     display: block;
   }
+
+
+  body.menu-open .header {
+    animation: menuFadeIn 0.3s ease;
+  }
+
+  body.menu-open.menu-closing .header {
+    animation: menuFadeOut 0.3s ease forwards;
+  }
+
 }
 
 @media (max-width: 600px) {
@@ -1739,5 +1742,11 @@ body.dark-theme .modal-close-btn:hover {
 
   .footer-link {
     margin-top: 40px;
+  }
+
+  .slider-card-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 }
