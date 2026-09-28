@@ -1,4 +1,3 @@
-/* ===== Theme ===== */
 const lightButton = document.querySelector('.theme-light');
 const darkButton = document.querySelector('.theme-dark');
 
@@ -20,7 +19,6 @@ if (darkButton) {
   });
 }
 
-/* ===== Блокировка скролла (общая для меню и модалки) ===== */
 let lockedScrollY = 0;
 let scrollLocks = 0;
 
@@ -40,13 +38,11 @@ function unlockScroll() {
   document.body.style.top = '';
   document.body.style.width = '';
 
-  // отключаем smooth, чтобы позиция вернулась мгновенно
   html.style.scrollBehavior = 'auto';
   window.scrollTo(0, lockedScrollY);
   html.style.scrollBehavior = '';
 }
 
-/* ===== Бургер-меню ===== */
 const burgerBtn = document.querySelector('.burger-btn');
 let menuIsOpen = false;
 let menuCloseTimer = null;
@@ -90,7 +86,6 @@ document.querySelectorAll('.header-navigation a').forEach((link) => {
   link.addEventListener('click', () => setMenuOpen(false, false));
 });
 
-/* ===== Слайдер (только на главной) ===== */
 const sliderTrack = document.querySelector('.slider-track');
 const sliderViewport = document.querySelector('.slider-viewport');
 const sliderPrevBtn = document.querySelector('.slider-button-left');
@@ -140,7 +135,6 @@ if (sliderTrack && sliderViewport) {
     isSliderAnimating = true;
     setSliderPosition(position, true);
 
-    // страховка: если transitionend не придёт, слайдер не «залипнет»
     clearTimeout(sliderFallbackTimer);
     sliderFallbackTimer = setTimeout(finishSliderTransition, 500);
   }
@@ -176,7 +170,6 @@ if (sliderTrack && sliderViewport) {
     const dx = e.changedTouches[0].screenX - touchStartX;
     const dy = e.changedTouches[0].screenY - touchStartY;
 
-    // игнорируем вертикальный скролл страницы
     if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
 
     moveSliderTo(dx > 0 ? sliderPosition - 1 : sliderPosition + 1);
@@ -193,7 +186,6 @@ if (sliderTrack && sliderViewport) {
   });
 }
 
-/* ===== Страница меню: карточки ===== */
 const menuCardsContainer = document.getElementById('menuCards');
 const menuTabs = document.querySelectorAll('.menu-tab');
 const menuLoadMoreBtn = document.querySelector('.menu-load-more');
@@ -269,7 +261,6 @@ if (menuLoadMoreBtn && menuCardsContainer) {
   });
 }
 
-/* ===== Модальное окно ===== */
 const modalOverlay = document.getElementById('modalOverlay');
 const modalImage = document.getElementById('modalImage');
 const modalTitle = document.getElementById('modalTitle');
@@ -363,7 +354,6 @@ if (modalOverlay) {
   });
 }
 
-/* ===== Escape: сначала модалка, иначе бургер-меню ===== */
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
 
@@ -374,13 +364,11 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ===== Переход через брейкпоинт 768px ===== */
 const mobileMedia = window.matchMedia('(max-width: 768px)');
 
 mobileMedia.addEventListener('change', (e) => {
   if (!e.matches) setMenuOpen(false, false);
 
-  // начальный набор карточек и кнопка пересчитываются под новую ширину
   if (menuCardsContainer && allProducts.length) {
     renderMenuCards(activeCategory);
   }
